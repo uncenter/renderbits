@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<title>Render Bits to Canvas</title>
+	</head>
+	<body>
+		<div>
+			<label for="inputs-bits">Bits</label>
+			<input type="text" id="input-bits">
+			<label for="input-width">Width</label>
+			<input type="number" id="input-width">
+			<button id="submit">Submit</button>
+		</div>
+		<canvas id="canvas" width="500" height="500"></canvas>
+		<script>
+			const canvas = document.querySelector('#canvas');
+			const ctx = canvas.getContext('2d');
+			ctx.fillStyle = 'rgb(0 0 0)';
+
+			const submitBtn = document.querySelector('#submit');
+			const bitsInput = document.querySelector('#input-bits');
+			bitsInput.value =
+				localStorage.getItem('bits') ||
+				'0010000100011100111011111111110111111110001111110000011110000000110000';
+			const widthInput = document.querySelector('#input-width');
+			widthInput.value = localStorage.getItem('width') || '10';
+
+			bitsInput.addEventListener('input', () => {
+				localStorage.setItem('bits', bitsInput.value);
+			});
+			widthInput.addEventListener('input', () => {
+				localStorage.setItem('width', widthInput.value);
+			});
+
+			submitBtn.addEventListener('click', () => {
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				canvas.width = 500;
+				canvas.height = 500;
+
+				const bits = bitsInput.value.split('');
+				const width = parseInt(widthInput.value);
+
+				let row = 0;
+				let col = 0;
+				const rows = Math.ceil(bits.length / width);
+				let size;
+				// Taller than it is wide.
+				if (rows > width) {
+					size = 500 / rows;
+					canvas.width = size * width;
+				} else {
+					// Wider than it is tall.
+					size = 500 / width;
+					canvas.height = size * rows;
+				}
+
+				for (const bit of bits) {
+					if (col === width) {
+						row++;
+						col = 0;
+					}
+					if (bit === '1') {
+						ctx.fillRect(size * col, size * row, size, size);
+					}
+					col++;
+				}
+			});
+		</script>
+	</body>
+</html>
