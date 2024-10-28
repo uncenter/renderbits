@@ -9,7 +9,6 @@
 			<input type="text" id="input-bits">
 			<label for="input-width">Width</label>
 			<input type="number" id="input-width">
-			<button id="submit">Submit</button>
 		</div>
 		<canvas id="canvas" width="500" height="500"></canvas>
 		<script>
@@ -17,7 +16,6 @@
 			const ctx = canvas.getContext('2d');
 			ctx.fillStyle = 'rgb(0 0 0)';
 
-			const submitBtn = document.querySelector('#submit');
 			const bitsInput = document.querySelector('#input-bits');
 			bitsInput.value =
 				localStorage.getItem('bits') ||
@@ -25,14 +23,18 @@
 			const widthInput = document.querySelector('#input-width');
 			widthInput.value = localStorage.getItem('width') || '10';
 
+			run();
+
 			bitsInput.addEventListener('input', () => {
 				localStorage.setItem('bits', bitsInput.value);
+				run();
 			});
 			widthInput.addEventListener('input', () => {
 				localStorage.setItem('width', widthInput.value);
+				run();
 			});
 
-			submitBtn.addEventListener('click', () => {
+			function run() {
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
 				canvas.width = 500;
 				canvas.height = 500;
@@ -64,7 +66,7 @@
 					}
 					col++;
 				}
-			});
+			};
 		</script>
 	</body>
 </html>
